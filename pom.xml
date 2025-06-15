@@ -75,7 +75,12 @@
 			<version>${jjwt.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.scala-js/scalajs-env-selenium -->
+		<dependency>
+			<groupId>org.scala-js</groupId>
+			<artifactId>scalajs-env-selenium_2.13</artifactId>
+			<version>1.1.1</version>
+		</dependency>
 		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>

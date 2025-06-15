@@ -1,9 +1,5 @@
 package org.smarthire.AUTH_SERVICE.SECURITY;
 
-
-import org.smarthire.AUTH_SERVICE.SECURITY.JwtAccessDeniedHandler;
-import org.smarthire.AUTH_SERVICE.SECURITY.JwtAuthenticationEntryPoint;
-import org.smarthire.AUTH_SERVICE.SECURITY.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean; // <--- Make sure this is imported
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -48,7 +44,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf.disable()) // <-- explicit disable here
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler)
@@ -69,4 +65,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
