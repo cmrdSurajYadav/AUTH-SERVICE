@@ -5,8 +5,10 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -37,6 +39,7 @@ public class JwtTokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
+
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
 
@@ -50,6 +53,7 @@ public class JwtTokenProvider {
 
         String jwt = null;
         try {
+
             jwt = Jwts.builder()
                     .setSubject(username) // The user identifier
                     .claim("roles", roles) // Add roles as a custom claim
@@ -66,6 +70,12 @@ public class JwtTokenProvider {
         }
         return jwt; // Will be null if an exception occurred in the try block
     }
+
+    public String generateTokenFromUserDetails(UserDetails userDetails) {
+        return generateToken(new UsernamePasswordAuthenticationToken(
+                userDetails.getUsername(), null, userDetails.getAuthorities()));
+    }
+
 
     private Key key() {
         byte[] keyBytes = null;

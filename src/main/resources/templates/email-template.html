@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Email</title>
+</head>
+<body>
+<h2>Hello <span th:text="${name}">User</span>,</h2>
+<p>Welcome to <b>SmartHire</b>!</p>
+<p>Here is your message:</p>
+<blockquote th:text="${message}">This is your message.</blockquote>
+
+<p>Regards,<br/>SmartHire Team</p>
+</body>
+</html>

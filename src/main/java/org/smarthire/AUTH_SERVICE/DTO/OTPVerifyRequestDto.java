@@ -1,15 +1,17 @@
 package org.smarthire.AUTH_SERVICE.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForgotPasswordResponse {
-
-    String mes;
+@Builder
+public class OTPVerifyRequestDto {
+    private Long userId;
+    @JsonProperty("OTP")
+    private Long OTP;
 }

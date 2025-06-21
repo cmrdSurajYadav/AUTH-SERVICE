@@ -21,26 +21,29 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { // Use email for lookup
-        User user = userRepository.findByEmail(email) // Find user by email
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-        // Get the single role name from the user's role object
-        String roleName = user.getRole().getRoleName();
+        if (user.getPassword() == null) {
+            throw new IllegalStateException("Password entity is null for user: " + email);
+        }
 
-        // Spring Security expects roles to be prefixed with "ROLE_"
-        // For example, if your roleName is "ADMIN", Spring Security will look for "ROLE_ADMIN"
-        // in hasRole("ADMIN"). We add the "ROLE_" prefix here.
-        GrantedAuthority authority = new SimpleGrantedAuthority(roleName); // Assuming roleName already has "ROLE_" prefix
+        if (user.getPassword().isBlank()) {
+            throw new IllegalStateException("Password hash is null or blank for user: " + email);
+        }
+
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getRoleName());
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), // Principal name (used by Authentication.getName())
+                user.getEmail(),
                 user.getPassword(),
-                user.getEnable(), // Account enabled status
-                true, // Account non-expired
-                true, // Credentials non-expired
-                true, // Account non-locked
-                Collections.singletonList(authority) // Use Collections.singletonList for a single role
+                user.getEnable(),
+                true,
+                true,
+                true,
+                Collections.singletonList(authority)
         );
     }
+
 }

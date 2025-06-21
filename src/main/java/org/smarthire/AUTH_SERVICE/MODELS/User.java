@@ -5,13 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "auth_users")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -21,11 +26,27 @@ public class User {
     private String email;
     @Column(unique = true)
     private String phoneNumber;
-    private String password;
+
+
     private Boolean enable;
 
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "role_id",nullable = false)
     private Role role;
+
+    private String password;
+
+
+    private LocalDateTime lastOtpVerifyTime;
+
+
+    private int noOfattamp;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedTime;
+
 
 }
