@@ -7,11 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EntityScan("org.smarthire.AUTH_SERVICE.MODELS")
 @SpringBootApplication
 @EnableScheduling
+@EnableAsync
 public class AuthServiceApplication implements ApplicationListener<WebServerInitializedEvent> {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthServiceApplication.class);

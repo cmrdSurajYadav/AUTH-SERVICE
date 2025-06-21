@@ -112,8 +112,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param newPassword The new encoded password.
      * @return The number of entities updated.
      */
-    @Modifying
-    @Transactional
-    @Query("UPDATE User u SET u.password = :newPassword WHERE u.id = :userId")
-    int updatePassword(@Param("userId") Long userId, @Param("newPassword") String newPassword);
+//    @Modifying
+//    @Transactional
+//    @Query("UPDATE User u SET u.password = :newPassword WHERE u.id = :userId")
+//    int updatePassword(@Param("userId") Long userId, @Param("newPassword") String newPassword);
 }

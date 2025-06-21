@@ -31,5 +31,7 @@ public class ApiResponse<T> {
     public ApiResponse(ErrorResponse errorResponse){
         this.status = errorResponse.getStatus();
         this.success= false;
+        this.timeStamp = LocalDateTime.now().toString();
+        this.errorResponse = errorResponse;
     }
 }

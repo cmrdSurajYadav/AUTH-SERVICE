@@ -1,11 +1,7 @@
 // src/main/java/org/smarthire/AUTH_SERVICE/CONTROLLER/AuthController.java
 package org.smarthire.AUTH_SERVICE.CONTROLLER;
 
-import org.smarthire.AUTH_SERVICE.DTO.ApiResponse;
-import org.smarthire.AUTH_SERVICE.DTO.ErrorResponse;
-import org.smarthire.AUTH_SERVICE.DTO.JwtAuthenticationResponse;
-import org.smarthire.AUTH_SERVICE.DTO.LoginRequest;
-import org.smarthire.AUTH_SERVICE.DTO.RegisterRequest;
+import org.smarthire.AUTH_SERVICE.DTO.*;
 import org.smarthire.AUTH_SERVICE.MODELS.User;
 import org.smarthire.AUTH_SERVICE.SERVICE.AuthService;
 import jakarta.validation.Valid; // Make sure this is imported for @Valid
@@ -33,10 +29,10 @@ public class AuthController {
      * @return ApiResponse with the registered User object on success, or ErrorResponse on failure.
      */
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<User>> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<ApiResponse<UserDTO>> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
             // Call the service to handle registration logic
-            User registeredUser = authService.registerUser(registerRequest);
+            UserDTO registeredUser = authService.registerUser(registerRequest);
             // Return success API response with HTTP 200 OK
             return ResponseEntity.ok(new ApiResponse<>(registeredUser));
         } catch (RuntimeException e) {
@@ -76,6 +72,50 @@ public class AuthController {
                     .errorMessage("An error occurred during login: " + e.getMessage())
                     .build();
             return new ResponseEntity<>(new ApiResponse<>(error), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<?>> forgotPassword(@Valid @RequestBody  ForgotPasswordRequest forgotPasswordRequest){
+
+        try {
+            ForgotPasswordResponse forgotPasswordResponse = authService.forgotPassword(forgotPasswordRequest);
+            return ResponseEntity.ok(new ApiResponse<>(forgotPasswordResponse));
+
+        } catch (Exception e) {
+            ErrorResponse error = ErrorResponse.builder()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR.value()) // Use 500 for unexpected server errors
+                    .errorMessage("An error occurred during login: " + e.getMessage())
+                    .build();
+            return new ResponseEntity<>(new ApiResponse<>(error), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<ApiResponse<?>> verifyOTP(@RequestBody OTPVerifyRequestDto otpVerifyRequestDto){
+        try {
+            OtpResponseDTO OTPResponseDto = authService.checkOTPMatch(otpVerifyRequestDto);
+            return ResponseEntity.ok(new ApiResponse<>(OTPResponseDto));
+        }catch (Exception e){
+            ErrorResponse error = ErrorResponse.builder()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR.value()) // Use 500 for unexpected server errors
+                    .errorMessage("OTP does not match: " + e.getMessage())
+                    .build();
+            return new ResponseEntity<>(new ApiResponse<>(error), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<?>> resetPassword(@Valid @RequestBody CreatePasswordRequest createPasswordRequest) {
+        try {
+            CreatePasswordResponse createPasswordResponse = authService.resetPassword(createPasswordRequest);
+            return ResponseEntity.ok(new ApiResponse<>(createPasswordResponse));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
